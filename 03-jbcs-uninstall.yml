@@ -1,0 +1,13 @@
+---
+- name: UnInstall apache/httpd webserver
+  hosts: loadbalancer 
+  tasks:
+  - name: Stop JBWS
+    command: ./apachectl stop
+    args:
+      chdir: /opt/jbcs-httpd24-2.4/httpd/sbin/
+  
+  - name: UnInstall JBWS
+    file:
+      path: /opt/jbcs-httpd24-2.4 
+      state: absent 

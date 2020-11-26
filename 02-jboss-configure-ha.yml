@@ -1,0 +1,24 @@
+---
+- name: Reconfigure JBoss EAP to HA
+  hosts: appserver
+  tasks:
+    - name: Stop Jboss Service
+      service:
+        name: jboss-eap-rhel
+        state: stopped
+
+    - name: Copy JBoss EAP HA startscript
+      copy:
+        src: jboss-eap.conf
+        dest: /etc/default/
+
+    - name: Copy JBoss EAP HA config
+      copy:
+        src: standalone-ha.xml
+        dest: /opt/jboss-as/jboss-eap-7.3/standalone/configuration/
+
+    - name: Start Jboss Service
+      service:
+        name: jboss-eap-rhel
+        state: started 
+

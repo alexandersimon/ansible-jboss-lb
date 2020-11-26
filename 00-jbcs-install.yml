@@ -1,0 +1,49 @@
+---
+- name: Install JBoss Core Services
+  hosts: loadbalancer 
+  tasks:
+  - name: Install requirements
+    yum:
+      name:
+        - apr
+        - apr-devel
+        - apr-util
+        - apr-util-devel
+        - apr-util-ldap
+        - elinks
+        - krb5-workstation
+        - mailcap
+        - unzip
+      state: present 
+  - name: Copy JBCS HTTPD zip
+    copy:
+      src: jbcs-httpd24.zip
+      dest: /opt/
+  - name: Unzip JBCS HTTPD
+    unarchive:
+      src: /opt/jbcs-httpd24.zip
+      dest: /opt/
+      remote_src: yes
+  - name: Delete JBCS HTTPD zip
+    file:
+      path: /opt/jbcs-httpd24.zip
+      state: absent
+  - name: Create Apache user group
+    group:
+      name: apache
+      state: present
+      gid: 48
+  - name: Add the user 'james' with a bash shell, appending the group 'admins' and 'developers' to the user's groups
+    user:
+      name: apache
+      shell: /bin/sh
+      groups: apache
+      uid: 48
+  - name: Recursively change ownership of a directory
+    file:
+      path: /opt/jbcs-httpd24-2.4
+      state: directory
+      recurse: yes
+      owner: apache
+      group: apache
+ 

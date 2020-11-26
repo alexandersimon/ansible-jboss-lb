@@ -1,0 +1,32 @@
+---
+- name: Configure JBWS 
+  hosts: loadbalancer
+  tasks:
+  - name: Execute postinstall
+    command: ./.postinstall
+    args:
+      chdir: /opt/jbcs-httpd24-2.4/httpd/
+
+  - name: Disable ssl support
+    command: mv /opt/jbcs-httpd24-2.4/httpd/conf.d/ssl.conf /opt/jbcs-httpd24-2.4/httpd/conf.d/ssl.conf.disabled
+    ignore_errors: yes
+
+  - name: Copy configuration
+    copy:
+      src: httpd.conf
+      dest: /opt/jbcs-httpd24-2.4/httpd/conf/
+      
+  - name: Copy configuration
+    copy:
+      src: mod_cluster.conf
+      dest: /opt/jbcs-httpd24-2.4/httpd/conf.d/
+
+  - name: Stop JBWS
+    command: ./apachectl stop 
+    args:
+      chdir: /opt/jbcs-httpd24-2.4/httpd/sbin/
+
+  - name: Start JBWS
+    command: ./apachectl start
+    args:
+      chdir: /opt/jbcs-httpd24-2.4/httpd/sbin/

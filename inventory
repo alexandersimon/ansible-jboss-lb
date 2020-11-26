@@ -1,0 +1,16 @@
+
+
+apache-httpd ansible_host=172.31.3.156
+apache-elk ansible_host=172.31.11.182
+jboss-eap0 ansible_host=172.31.13.16
+jboss-eap1 ansible_host=172.31.3.196
+
+[loadbalancer]
+apache-httpd
+
+[appserver]
+jboss-eap0
+jboss-eap1
+
+[monitoring]
+apache-elk
